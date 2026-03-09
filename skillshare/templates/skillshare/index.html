@@ -3,9 +3,13 @@
 {% block content %}
     {% for object in object_list %}
     <ul>
-        <li>{{ object.taker }}</li>
+        {% if object.taker %}
+            <li>{{ object.taker }} à prit le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }})</li>
+        {% else %}
+            <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) -- Reserver</li>
+        {% endif %}
     </ul>
     {% empty %}
-        <li>No articles yet.</li>
+        <li>No schedules yet.</li>
     {% endfor %}
 {% endblock %}

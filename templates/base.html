@@ -12,14 +12,21 @@
     <div class="container">
         <header>
             <div>
-                <h1>SkillShare</h1>
+                <a href="{% url "skillshare:index" %}">
+                    <h1>SkillShare</h1>
+                </a>
             </div>
         <div>
-            {% if user.is_authenticated %}
-            <h3>Bonjour {{ user.email }}</h3>
-            {% else %}
-            <h3>Bonjour, vous n'êtes pas connecté.</h3>
-            {% endif %}
+            <ul>
+                {% if user.is_authenticated %}
+                <li>Bonjour {{ user.email }}</li>
+                {% else %}
+                <li>Bonjour, vous n'êtes pas connecté.</li>
+                {% endif %}
+                <li>Accueil</li>
+                <li>Mes services</li>
+                <li>Les créneaux</li>
+            </ul>
         </div>
     </header>
     <main>
