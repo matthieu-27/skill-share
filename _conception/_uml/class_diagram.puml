@@ -8,6 +8,7 @@ class Skill {
     + id : int
     + name: str
     + category : Category
+    + giver : User
 }
 
 class Category {
@@ -19,9 +20,9 @@ class Category {
 class Schedule {
     + id : int
     + skill : Skill
-    + available_at : DateTime
-    + is_booked : bool 
-    + booker : User | None
+    + scheduled_at : DateTime
+    + is_active : bool 
+    + taker : User | None
 }
 
 Skill "1" -- "1..*" Category
