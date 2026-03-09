@@ -1,0 +1,18 @@
+-- Créneaux pour des compétences variées, certains réservés (taker_id), d'autres libres (taker_id NULL)
+INSERT INTO skillshare_schedule (scheduled_at, is_active, taker_id, skill_id)
+VALUES
+-- Créneaux passés (exemples)
+('2026-03-05 10:00:00', TRUE, 2, 1),  -- Création et entretien d'un potager bio (giver_id 1)
+('2026-03-06 14:30:00', TRUE, 3, 5),  -- Fabrication de compost domestique (giver_id 1)
+('2026-03-07 16:00:00', TRUE, NULL, 7),  -- Cours d'anglais conversationnel (giver_id 2) - libre
+('2026-03-08 09:15:00', TRUE, 1, 10), -- Pose de carrelage mural et au sol (giver_id 3)
+('2026-03-08 18:00:00', FALSE, 4, 15), -- Yoga prénatal et postnatal (giver_id 4) - annulé
+
+-- Créneaux futurs (mars 2026)
+('2026-03-12 11:00:00', TRUE, NULL, 3),  -- Préparation de pains et viennoiseries maison (giver_id 4) - libre
+('2026-03-13 15:30:00', TRUE, 2, 12), -- Réparation de meubles en bois (giver_id 4)
+('2026-03-14 10:00:00', TRUE, NULL, 18), -- Cours de guitare pour débutants (giver_id 3) - libre
+('2026-03-15 17:00:00', TRUE, 3, 20), -- Coaching sportif : renforcement musculaire (giver_id 2)
+('2026-03-16 09:30:00', TRUE, 1, 22), -- Aide aux devoirs (primaire et collège) (giver_id 3)
+('2026-03-17 14:00:00', TRUE, NULL, 24), -- Photographie : composition et retouche (giver_id 2) - libre
+('2026-03-18 16:30:00', TRUE, 4, 28);   -- Danse : salsa et bachata (giver_id 1)
