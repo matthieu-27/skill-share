@@ -1,0 +1,31 @@
+@startuml
+
+class User{
+    + Standard Django User fields
+}
+
+class Skill {
+    + id : int
+    + name: str
+    + category : Category
+}
+
+class Category {
+    + id : int
+    + name: str
+    + description : str
+}
+
+class Schedule {
+    + id : int
+    + skill : Skill
+    + available_at : DateTime
+    + is_booked : bool 
+    + booker : User | None
+}
+
+Skill "1" -- "1..*" Category
+
+User "1" -- "0..*" Skill
+
+Schedule "1..*" -- "1" Skill
