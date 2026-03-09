@@ -1,0 +1,15 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor Visiteur
+actor User
+actor Admin
+rectangle SkillShare {
+    Visiteur -- (Affiche les prochains créneaux en cours anonymement)
+    Visiteur -- (Affiche la liste des compétences que l'application propose)
+    User -- (Indiquer les compétences qu'il possède et peux partager)
+    User -- (Indiquer les créneaux ou il recherche quelqu'un pour un compétences non possédée)
+    User -- (Afficher les prochainx créneaux ou d'autres utilisateur propose des compétences non possédée)
+    Admin -- (Gestion des utilisateurs)
+}
+@enduml
