@@ -2,6 +2,7 @@
 
 class User{
     + Standard Django User fields
+    + slug
 }
 
 class Skill {
