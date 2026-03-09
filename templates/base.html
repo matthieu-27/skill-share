@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShare - Accueil</title>
+</head>
+<body>
+    <header>
+         {% if user.is_authenticated %}
+         <h3>Bonjour {{ user.email }}</h3>
+         {% else %}
+         <h3>Bonjour, vous n'êtes pas connecté.</h3>
+         {% endif %}
+        {% block header %}{% endblock %}
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
