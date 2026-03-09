@@ -4,9 +4,9 @@
     {% for object in object_list %}
     <ul>
         {% if object.taker %}
-            <li>{{ object.taker }} à prit le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }})</li>
+            <li>{{ object.skill.giver }} et {{ object.taker }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill }} ({{ object.skill.category }})</li>
         {% else %}
-            <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) -- Reserver</li>
+            <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver }} -- Reserver</li>
         {% endif %}
     </ul>
     {% empty %}
