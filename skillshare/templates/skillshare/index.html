@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-{% for object in object_list %}
-<ul>
-    <li>{{ object.taker }}</li>
-</ul>
-{% empty %}
-    <li>No articles yet.</li>
-{% endfor %}
+    {% for object in object_list %}
+    <ul>
+        <li>{{ object.taker }}</li>
+    </ul>
+    {% empty %}
+        <li>No articles yet.</li>
+    {% endfor %}
 {% endblock %}

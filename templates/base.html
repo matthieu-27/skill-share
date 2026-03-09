@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillShare - Accueil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'skillshare/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'skillshare/style.css' %}">
 </head>
 <body>
-    <header>
-         {% if user.is_authenticated %}
-         <h3>Bonjour {{ user.email }}</h3>
-         {% else %}
-         <h3>Bonjour, vous n'êtes pas connecté.</h3>
-         {% endif %}
-        {% block header %}{% endblock %}
+    <div class="container">
+        <header>
+            <div>
+                <h1>SkillShare</h1>
+            </div>
+        <div>
+            {% if user.is_authenticated %}
+            <h3>Bonjour {{ user.email }}</h3>
+            {% else %}
+            <h3>Bonjour, vous n'êtes pas connecté.</h3>
+            {% endif %}
+        </div>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
+    </div>
 </body>
 </html>
