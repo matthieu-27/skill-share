@@ -1,0 +1,31 @@
+{% extends 'skillshare/bootstrap.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+<div class="container">
+    <header>
+        <div>
+            <a href="{% url "skillshare:index" %}">
+                <h1>SkillShare</h1>
+            </a>
+        </div>
+    <div>
+        <ul>
+            {% if user.is_authenticated %}
+            <li>Bonjour {{ user.email }}</li>
+            {% else %}
+            <li>Bonjour, vous n'êtes pas connecté.</li>
+            {% endif %}
+            <li>Accueil</li>
+            <li>Mes services</li>
+            <li>Les créneaux</li>
+        </ul>
+    </div>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+</div>
+
+{% endblock %}
