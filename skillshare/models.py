@@ -34,13 +34,15 @@ class Skill(models.Model):
 class Schedule(models.Model):
     """
     Schedule class is associated with a Skill, through a `Skill.giver` and a `taker`
-    has a `scheduled_at` Date
+    has a `scheduled_at` Date, an `activity_description` and a `is_request` to add help requests
     """
 
     taker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     scheduled_at = models.DateTimeField()
     is_active = models.BooleanField(default=False)
     skill = models.ForeignKey(Skill, on_delete=models.DO_NOTHING)
+    activity_description = models.TextField(blank=True, null=True)
+    is_request = models.BooleanField(default=False)  # true if it's an help request
 
     def __str__(self) -> str:
         return self.scheduled_at.isoformat()

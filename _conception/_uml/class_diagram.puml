@@ -10,6 +10,8 @@ class Skill {
     + name: str
     + category : Category
     + giver : User
+    + activity_description : str
+    + is_request : bool
 }
 
 class Category {
