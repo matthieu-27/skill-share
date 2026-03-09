@@ -4,8 +4,9 @@
 
 {% for object in object_list %}
 <ul>
-    <li>{{ object }}</li>
+    <li>{{ object.taker }}</li>
 </ul>
+{% empty %}
+    <li>No articles yet.</li>
 {% endfor %}
-
 {% endblock %}
