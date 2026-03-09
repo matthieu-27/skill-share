@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
-
+AUTH_USER_MODEL = "skillshare.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "skillshare.apps.SkillshareConfig",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [

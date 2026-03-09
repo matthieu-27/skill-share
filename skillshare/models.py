@@ -1,6 +1,9 @@
 from django.conf import settings  # type: ignore
+from django.contrib.auth.models import AbstractUser  # type: ignore
 from django.db import models  # type: ignore
-from django.utils import timesince, timezone
+from django.utils import timesince, timezone  # type: ignore
+
+from .utils import get_random_slug
 
 
 class Category(models.Model):
@@ -44,3 +47,11 @@ class Schedule(models.Model):
 
     def time_since(self):
         return timesince.timesince(self.scheduled_at, timezone.now())
+
+
+class CustomUser(AbstractUser):
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = get_random_slug()
+        super().save(*args, **kwargs)
