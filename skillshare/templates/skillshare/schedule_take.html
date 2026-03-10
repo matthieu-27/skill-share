@@ -14,7 +14,7 @@
 {{ form.media }}
 {# Display a form #}
 <h1>
-    Veuillez confirmer votre réservation de crénaux avec {{ schedule.skill.giver.first_name }}
+    Veuillez confirmer votre réservation de crénaux avec {{ schedule.user.username }}
 </h1>
 <form method="post" class="form">
   {% csrf_token %}
