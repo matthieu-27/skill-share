@@ -37,7 +37,9 @@ class Schedule(models.Model):
     has a `scheduled_at` Date, an `activity_description` and a `is_request` to add help requests
     """
 
-    taker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    taker = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, null=True
+    )
     scheduled_at = models.DateTimeField()
     is_active = models.BooleanField(default=False)
     skill = models.ForeignKey(Skill, on_delete=models.DO_NOTHING)

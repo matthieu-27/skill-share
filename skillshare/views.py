@@ -1,14 +1,14 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect  # type: ignore
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render  # type: ignore
 from django.urls import reverse  # type: ignore
 from django.utils import timezone  # type: ignore
 from django.views.generic import ListView  # type: ignore
 from django.views.generic.edit import CreateView  # type: ignore
 
-from .forms import ScheduleForm, SkillForm
+from .forms import ConfirmForm, ScheduleForm, SkillForm
 from .models import Schedule, Skill
 
 
@@ -64,12 +64,26 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
 
 class ScheduleTakeView(LoginRequiredMixin, CreateView):
-    def post(
-        self, request: HttpRequest, pk: int, *args: str, **kwargs: Any
-    ) -> HttpResponse:
+    model = Schedule
+    fields = ["taker"]
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         schedule = get_object_or_404(Schedule, pk=pk)
-        if not schedule.is_active and schedule.taker is None:
+        if schedule.taker is None:
             schedule.taker = request.user
-            schedule.is_active = True
             schedule.save()
         return redirect("skillshare:index")
+
+
+def schedule_take_form(request, pk):
+    schedule = Schedule.objects.get(pk=pk)
+    if request.method == "GET":
+        form = ConfirmForm()
+    if request.method == "POST":
+        if schedule.taker is None:
+            schedule.taker = request.user
+            schedule.save()
+        return HttpResponseRedirect("/skillshare")
+    return render(
+        request, "skillshare/schedule_take.html", {"form": form, "schedule": schedule}
+    )

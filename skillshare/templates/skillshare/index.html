@@ -5,16 +5,20 @@
     <ul>
         {% if not user.is_authenticated %}
             {% if object.taker %}
-                <li>{{ object.skill.giver }} et {{ object.taker }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill.name }} ({{ object.skill.category }})</li>
+                <li>{{ object.skill.giver.slug}} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at }} pour {{ object.activity_description }} </li>
             {% else %}
-                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
+                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.activity_description }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
             {% endif %}
         {% else %}
-            {% if object.taker %}
-                <li>{{ object.skill.giver.slug }} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill.name }} ({{ object.skill.category }})</li>
+            {% if object.taker %} 
+                <li>{{ object.skill.giver.first_name }} et {{ object.taker.first_name }} seront ensemble le {{ object.scheduled_at.day }}/{{ object.scheduled_at.month }} pour {{ object.activity_description }}</li> 
+            {% else %} 
+            {% if object.is_request %}
+                <li>{{ object.skill.giver.first_name }} à fait une demande le {{ object.scheduled_at }} pour {{ object.activity_description }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li> 
             {% else %}
-                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver.slug }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
+                <li>Créneau disponible le {{ object.scheduled_at }} -- {{ object.activity_description }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
             {% endif %}
+            {% endif %} 
         {% endif %}
     </ul>
     {% empty %}

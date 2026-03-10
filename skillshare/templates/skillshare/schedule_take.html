@@ -1,0 +1,25 @@
+{% extends "skillshare/base.html" %}
+
+{% block content %}
+
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript  %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{ form.media }}
+{# Display a form #}
+<h1>
+    Veuillez confirmer votre réservation de crénaux avec {{ schedule.skill.giver.first_name }}
+</h1>
+<form method="post" class="form">
+  {% csrf_token %}
+
+  {% bootstrap_button button_type="submit" content="Confirmer" %}
+  {% bootstrap_button button_type="reset" content="Annuler" %}
+</form>
+{% endblock %}

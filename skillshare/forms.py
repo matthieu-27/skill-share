@@ -21,3 +21,9 @@ class ScheduleForm(forms.ModelForm):
             "skill": "Compétences",
             "is_request": "Demande d'aide",
         }
+
+
+class ConfirmForm(forms.Form):
+    confirm = forms.BooleanField(
+        label="Êtes vous sur de confirmer ce créneaux ?", required=True
+    )
