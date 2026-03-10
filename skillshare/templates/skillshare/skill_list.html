@@ -3,7 +3,7 @@
 {% block content %}
     {% for object in object_list %}
     <ul>
-        <li>{{ object.name }} -- {{ object.category }} by @{{ object.giver }}</li>
+        <li>{{ object.name }} -- {{ object.category }} by @{{ object.giver.slug }}</li>
     </ul>
     {% empty %}
         <li>No skills yet.</li>

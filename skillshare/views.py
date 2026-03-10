@@ -6,7 +6,7 @@ from django.utils import timezone  # type: ignore
 from django.views.generic import ListView  # type: ignore
 from django.views.generic.edit import CreateView  # type: ignore
 
-from .forms import SkillForm
+from .forms import ScheduleForm, SkillForm
 from .models import Schedule, Skill
 
 
@@ -42,4 +42,20 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
-        return reverse("skillshare:skill_form")
+        return reverse("skillshare:skill_add")
+
+
+class ScheduleCreateView(LoginRequiredMixin, CreateView):
+    model = Schedule
+    form_class = ScheduleForm
+    template_name = "skillshare/schedule_form.html"
+    login_url = "/skillshare"
+    redirect_field_name = "redirect_to"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["skill"].queryset = Skill.objects.filter(giver=self.request.user)
+        return form
+
+    def get_success_url(self) -> str:
+        return reverse("skillshare:schedule_add")

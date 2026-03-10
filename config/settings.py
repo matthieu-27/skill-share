@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "skillshare.apps.SkillshareConfig",
     "django_extensions",
     "django_bootstrap5",
+    "bootstrap_datepicker_plus",
 ]
 
 MIDDLEWARE = [
