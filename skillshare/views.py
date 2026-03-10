@@ -95,3 +95,13 @@ def schedule_take_form(request, pk):
     return render(
         request, "skillshare/schedule_take.html", {"form": form, "schedule": schedule}
     )
+
+
+def schedule_matching_view(request):
+    user_skills = request.user.skill_set.all()
+    matching_schedules = Schedule.objects.filter(skill__in=user_skills).exclude(
+        user=request.user
+    )
+    return render(
+        request, "skillshare/schedule_matching.html", {"matchs": matching_schedules}
+    )
