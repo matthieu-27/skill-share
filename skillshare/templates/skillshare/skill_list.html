@@ -3,9 +3,9 @@
 {% block content %}
     {% for object in object_list %}
     <ul>
-        <li>{{ object.name }} -- {{ object.category }} by @{{ object.giver.slug }}</li>
+        <li>{{ object.name }} -- {{ object.category }} by @{{ object.giver.username }}</li>
     </ul>
     {% empty %}
-        <li>No skills yet.</li>
+        <li>Pas encore de compétences enregistrées..</li>
     {% endfor %}
 {% endblock %}

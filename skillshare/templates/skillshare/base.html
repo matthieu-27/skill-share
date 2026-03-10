@@ -3,27 +3,36 @@
 {% load django_bootstrap5 %}
 
 {% block bootstrap5_content %}
-<div class="container">
-    <header>
-        <div>
-            <a href="{% url "skillshare:index" %}">
-                <h1>SkillShare</h1>
-            </a>
-        </div>
-    <div>
-        <ul>
+<header>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url "skillshare:index" %}">SkillShare</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="{% url "skillshare:index" %}" class="nav-link active">Les créneaux</a>
+                </li>
+                <li class="nav-item"><a href="{% url "skillshare:skill_list" %}" class="nav-link">Les compétences</a></li>
+                <li class="nav-item"><a href="{% url "skillshare:skill_add" %}" class="nav-link">Ajouter une compétence</a></li>
+                <li class="nav-item"><a href="{% url "skillshare:schedule_add" %}" class="nav-link">Ajouter un créneau</a></li>
+            </ul>
             {% if user.is_authenticated %}
-            <li>Bonjour {{ user.email }}</li>
+            <span class="navbar-text px-2">Bonjour {{ user.username }}</span>
+            <form action="{% url 'logout' %}" method="post" >
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
             {% else %}
-            <li>Bonjour, vous n'êtes pas connecté.</li>
+            <span class="navbar-text px-2">Bonjour, vous n'êtes pas connecté.</span>
+            <a href="{% url "admin:login" %}">Connection</a>
             {% endif %}
-            <li>Accueil</li>
-            <li>Mes services</li>
-            <li>Les créneaux</li>
-        </ul>
+      </span>
+        </div>
+
     </div>
+</nav>
 </header>
-<main>
+<main class="container-fluid">
     {% block content %}{% endblock %}
 </main>
 </div>
