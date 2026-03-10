@@ -1,8 +1,9 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render  # type: ignore
+from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.shortcuts import render  # type: ignore
 from django.urls import reverse  # type: ignore
 from django.utils import timezone  # type: ignore
 from django.views.generic import ListView  # type: ignore
@@ -56,29 +57,36 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["skill"].queryset = Skill.objects.filter(giver=self.request.user)
+        form.fields["skill"].queryset = Skill.objects.filter(
+            ~Q(giver=self.request.user)
+        )
         return form
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_success_url(self) -> str:
         return reverse("skillshare:schedule_add")
 
 
-class ScheduleTakeView(LoginRequiredMixin, CreateView):
-    model = Schedule
-    fields = ["taker"]
-
-    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
-        schedule = get_object_or_404(Schedule, pk=pk)
-        if schedule.taker is None:
-            schedule.taker = request.user
-            schedule.save()
-        return redirect("skillshare:index")
-
-
 def schedule_take_form(request, pk):
+    """
+    Form that sets the taker of a Schedule,
+    Checks if the Schedule creator is the request maker, if so redirect.
+
+    Otherwise saves the interested user for the selected Schedule
+    """
     schedule = Schedule.objects.get(pk=pk)
+    if schedule.user == request.user:
+        return HttpResponseRedirect("/skillshare")
     if request.method == "GET":
         form = ConfirmForm()
+        return render(
+            request,
+            "skillshare/schedule_take.html",
+            {"form": form, "schedule": schedule},
+        )
     if request.method == "POST":
         if schedule.taker is None:
             schedule.taker = request.user
