@@ -33,3 +33,4 @@ Skill "1" -- "1..*" Category
 User "1" -- "0..*" Skill
 
 Schedule "1..*" -- "1" Skill
+Schedule "0..*" -right-- "1" User
