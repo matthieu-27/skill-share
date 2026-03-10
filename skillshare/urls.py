@@ -1,6 +1,12 @@
 from django.urls import path  # type: ignore
 
-from .views import HomeListView, ScheduleCreateView, SkillCreateView, SkillListView
+from .views import (
+    HomeListView,
+    ScheduleCreateView,
+    ScheduleTakeView,
+    SkillCreateView,
+    SkillListView,
+)
 
 app_name = "skillshare"
 urlpatterns = [
@@ -8,4 +14,5 @@ urlpatterns = [
     path("skills/", SkillListView.as_view(), name="skill_list"),
     path("skills/add", SkillCreateView.as_view(), name="skill_add"),
     path("schedules/add", ScheduleCreateView.as_view(), name="schedule_add"),
+    path("schedules/<int:pk>/take", ScheduleTakeView.as_view(), name="schedule_take"),
 ]

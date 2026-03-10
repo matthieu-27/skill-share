@@ -1,18 +1,22 @@
--- Créneaux pour des compétences variées, certains réservés (taker_id), d'autres libres (taker_id NULL)
-INSERT INTO skillshare_schedule (scheduled_at, is_active, taker_id, skill_id)
+-- Créneaux variés (offres et demandes)
+INSERT INTO skillshare_schedule (scheduled_at, is_active, taker_id, skill_id, activity_description, is_request)
 VALUES
--- Créneaux passés (exemples)
-('2026-03-05 10:00:00', TRUE, 2, 1),  -- Création et entretien d'un potager bio (giver_id 1)
-('2026-03-06 14:30:00', TRUE, 3, 5),  -- Fabrication de compost domestique (giver_id 1)
-('2026-03-07 16:00:00', TRUE, NULL, 7),  -- Cours d'anglais conversationnel (giver_id 2) - libre
-('2026-03-08 09:15:00', TRUE, 1, 10), -- Pose de carrelage mural et au sol (giver_id 3)
-('2026-03-08 18:00:00', FALSE, 4, 15), -- Yoga prénatal et postnatal (giver_id 4) - annulé
+-- Offres de créneaux (is_request = FALSE)
+('2026-03-12 10:00:00', TRUE, 2, 3, 'Atelier pratique pour apprendre à faire du pain maison, tous niveaux.', FALSE),
+('2026-03-13 15:30:00', TRUE, 1, 12, 'Réparation d''une table en chêne, outils fournis.', FALSE),
+('2026-03-14 10:00:00', TRUE, 4, 18, 'Cours de guitare acoustique, durée 1h30, guitare disponible sur place.', FALSE),
+('2026-03-15 17:00:00', TRUE, 3, 20, 'Séance de coaching sportif en plein air, parc municipal.', FALSE),
+('2026-03-16 09:30:00', TRUE, 2, 22, 'Aide aux devoirs pour un élève de 5ème, mathématiques et français.', FALSE),
 
--- Créneaux futurs (mars 2026)
-('2026-03-12 11:00:00', TRUE, NULL, 3),  -- Préparation de pains et viennoiseries maison (giver_id 4) - libre
-('2026-03-13 15:30:00', TRUE, 2, 12), -- Réparation de meubles en bois (giver_id 4)
-('2026-03-14 10:00:00', TRUE, NULL, 18), -- Cours de guitare pour débutants (giver_id 3) - libre
-('2026-03-15 17:00:00', TRUE, 3, 20), -- Coaching sportif : renforcement musculaire (giver_id 2)
-('2026-03-16 09:30:00', TRUE, 1, 22), -- Aide aux devoirs (primaire et collège) (giver_id 3)
-('2026-03-17 14:00:00', TRUE, NULL, 24), -- Photographie : composition et retouche (giver_id 2) - libre
-('2026-03-18 16:30:00', TRUE, 4, 28);   -- Danse : salsa et bachata (giver_id 1)
+-- Demandes de créneaux (is_request = TRUE)
+('2026-03-17 14:00:00', TRUE, 1, 7, 'Je cherche un cours d''anglais pour préparer un voyage aux États-Unis.', TRUE),
+('2026-03-18 16:30:00', TRUE, 3, 24, 'Besoin d''aide pour retoucher des photos de famille.', TRUE),
+('2026-03-19 11:00:00', TRUE, 4, 5, 'Demande d''un atelier sur la fabrication de compost, débutant.', TRUE),
+('2026-03-20 18:00:00', TRUE, 2, 10, 'Recherche d''un créneau pour apprendre à poser du carrelage dans une salle de bain.', TRUE),
+
+-- Créneaux annulés ou inactifs
+('2026-03-05 10:00:00', FALSE, 3, 1, 'Atelier potager bio annulé pour cause de pluie.', FALSE),
+('2026-03-08 18:00:00', FALSE, 1, 15, 'Séance de yoga prénatal annulée, la professeure est malade.', FALSE),
+
+-- Créneaux libres (taker_id = 1, 2, 3 ou 4 selon le contexte, mais ici simulés comme "réservés" par un utilisateur)
+('2026-03-21 14:00:00', TRUE, 2, 28, 'Cours de salsa pour débutants, salle de danse du centre communautaire.', FALSE);

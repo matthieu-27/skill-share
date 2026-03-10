@@ -1,6 +1,8 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect  # type: ignore
 from django.urls import reverse  # type: ignore
 from django.utils import timezone  # type: ignore
 from django.views.generic import ListView  # type: ignore
@@ -59,3 +61,15 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self) -> str:
         return reverse("skillshare:schedule_add")
+
+
+class ScheduleTakeView(LoginRequiredMixin, CreateView):
+    def post(
+        self, request: HttpRequest, pk: int, *args: str, **kwargs: Any
+    ) -> HttpResponse:
+        schedule = get_object_or_404(Schedule, pk=pk)
+        if not schedule.is_active and schedule.taker is None:
+            schedule.taker = request.user
+            schedule.is_active = True
+            schedule.save()
+        return redirect("skillshare:index")

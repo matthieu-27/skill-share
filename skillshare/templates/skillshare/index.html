@@ -5,20 +5,19 @@
     <ul>
         {% if not user.is_authenticated %}
             {% if object.taker %}
-                <li>{{ object.skill.giver }} et {{ object.taker }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill }} ({{ object.skill.category }})</li>
+                <li>{{ object.skill.giver }} et {{ object.taker }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill.name }} ({{ object.skill.category }})</li>
             {% else %}
-                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver }} -- Reserver</li>
+                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
             {% endif %}
         {% else %}
             {% if object.taker %}
-                <li>{{ object.skill.giver.slug }} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill }} ({{ object.skill.category }})</li>
+                <li>{{ object.skill.giver.slug }} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at }} pour {{ object.skill.name }} ({{ object.skill.category }})</li>
             {% else %}
-                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver.slug }} -- Reserver</li>
+                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.skill }} ({{ object.skill.category }}) avec {{ object.skill.giver.slug }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
             {% endif %}
         {% endif %}
-
     </ul>
     {% empty %}
-        <li>No schedules yet.</li>
+        <li>Pas de créneaux pour l'instant..</li>
     {% endfor %}
 {% endblock %}
