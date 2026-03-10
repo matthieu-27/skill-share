@@ -15,7 +15,14 @@
                 <li>{{ object.user.first_name }} et {{ object.taker.first_name }} seront ensemble le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }}</li> 
             {% else %} 
             {% if object.is_request and not object.taker %}
-                <li> {{ object.user.username }} à fait une demande le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li> 
+                <li> 
+                    {{ object.user.username }} à fait une demande le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- 
+                    {% if object.skill in user.skill_set.all %}
+                    <a href="{% url 'skillshare:schedule_take' slot.id %}" class="btn btn-primary">Réserver</a>
+                    {% else %}
+                        <button class="btn btn-secondary" disabled>Compétence requise manquante</button>
+                    {% endif %}
+                </li> 
             {% else %}
                 <li>Créneau disponible le {{ object.scheduled_at }} avec {{ object.user.username }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
             {% endif %}
