@@ -1,5 +1,7 @@
 from django.conf import settings  # type: ignore
-from django.contrib.auth.models import AbstractUser  # type: ignore
+from django.contrib.auth.models import (  # type: ignore
+    AbstractUser,
+)
 from django.db import models  # type: ignore
 from django.utils import timesince, timezone  # type: ignore
 
@@ -37,12 +39,20 @@ class Schedule(models.Model):
     has a `scheduled_at` Date, an `activity_description` and a `is_request` to add help requests
     """
 
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )  # Celui qui crée la demande
     taker = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, null=True
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="taken_schedules",
     )
     scheduled_at = models.DateTimeField()
     is_active = models.BooleanField(default=False)
     skill = models.ForeignKey(Skill, on_delete=models.DO_NOTHING)
+
     activity_description = models.TextField(blank=True, null=True)
     is_request = models.BooleanField(default=False)  # true if it's an help request
 
