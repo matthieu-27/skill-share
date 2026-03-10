@@ -14,7 +14,7 @@
                 </li>
                 <li class="nav-item"><a href="{% url "skillshare:skill_list" %}" class="nav-link">Les compétences</a></li>
                 <li class="nav-item"><a href="{% url "skillshare:skill_add" %}" class="nav-link">Ajouter une compétence</a></li>
-                <li class="nav-item"><a href="{% url "skillshare:schedule_add" %}" class="nav-link">Ajouter un créneau</a></li>
+                <li class="nav-item"><a href="{% url "skillshare:schedule_add" %}" class="nav-link">Ajouter une disponibilité</a></li>
             </ul>
             {% if user.is_authenticated %}
             <span class="navbar-text px-2">Bonjour {{ user.username }}</span>
