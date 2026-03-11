@@ -2,6 +2,7 @@ from typing import Any
 
 from django.contrib import messages  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect  # type: ignore
 from django.urls import reverse  # type: ignore
 from django.utils import timezone
@@ -16,8 +17,12 @@ class HomeListView(ListView):
     model = Schedule
     template_name = "skillshare/index.html"
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        paginator = Paginator(context["object_list"], 5)  # 5 éléments par page
+        page_number = self.request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context["page_obj"] = page_obj
         context["now"] = timezone.now()
         return context
 
