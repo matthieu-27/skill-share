@@ -1,11 +1,25 @@
 {% extends "skillshare/base.html" %}
 
 {% block content %}
-    {% for object in object_list %}
-    <ul>
-        <li>{{ object.name }} -- {{ object.category }} by @{{ object.giver.username }}</li>
-    </ul>
-    {% empty %}
-        <li>Pas encore de compétences enregistrées..</li>
-    {% endfor %}
+{% for category, skills in categories %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>{{ category.name }}</h2>
+        </div>
+        <div class="card-body">
+            <p>{{ category.description }}</p>
+            <ul class="list-group">
+                {% for skill in skills %}
+                    <li class="list-group-item">
+                        {{ skill.name }} - {{ skill.giver.username }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Aucune compétence dans cette catégorie.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% empty %}
+    <div class="alert alert-info">Aucune catégorie trouvée.</div>
+{% endfor %}
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib import messages  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
 from django.http import HttpResponseRedirect  # type: ignore
 from django.urls import reverse  # type: ignore
+from django.utils import timezone
 from django.views.generic import ListView  # type: ignore
 from django.views.generic.edit import CreateView, FormView  # type: ignore
 
@@ -17,6 +18,7 @@ class HomeListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context["now"] = timezone.now()
         return context
 
 
@@ -26,6 +28,13 @@ class SkillListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        # Regrouper les compétences par catégorie en utilisant object_list
+        categories_dict: dict[Any, Any] = {}
+        for skill in context["object_list"]:
+            if skill.category not in categories_dict:
+                categories_dict[skill.category] = []
+            categories_dict[skill.category].append(skill)
+        context["categories"] = categories_dict.items()
         return context
 
 
