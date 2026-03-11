@@ -15,7 +15,6 @@ from .models import Schedule, Skill
 class HomeListView(ListView):
     model = Schedule
     template_name = "skillshare/index.html"
-    ordering = ["-id"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,6 +53,12 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # Vérifier si la compétence existe déjà pour cet utilisateur
+        if Skill.objects.filter(
+            name=form.cleaned_data["name"], giver=self.request.user
+        ).exists():
+            messages.error(self.request, "Vous avez déjà une compétence avec ce nom.")
+            return self.form_invalid(form)
         form.instance.giver = self.request.user
         return super().form_valid(form)
 
@@ -62,6 +67,14 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
 
 
 class ScheduleCreateView(LoginRequiredMixin, CreateView):
+    """
+    Schedule creation view, allows users to create a new schedule for a skill.
+
+    Uses LoginRequiredMixin to ensure the user is authenticated.
+
+    Uses CreateView to handle the form submission.
+    """
+
     model = Schedule
     form_class = ScheduleForm
     template_name = "skillshare/schedule_form.html"
@@ -69,6 +82,11 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
     redirect_field_name = "redirect_to"
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Function used to check if the user is authenticated.
+
+        Displays an error message if the user is not authenticated.
+        """
         if not request.user.is_authenticated:
             messages.error(
                 request, "Vous devez être connecté pour accéder à cette page."
@@ -76,16 +94,25 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
+        """
+        Function used to pass the user to the form.
+        """
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
     def form_valid(self, form):
+        """
+        Function used to save the form and display a success message.
+        """
         form.instance.user = self.request.user
         messages.success(self.request, "Votre demande a bien été enregistrée.")
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
+        """
+        Function used to redirect the user to the home page after the form is submitted.
+        """
         return reverse("skillshare:index")
 
 

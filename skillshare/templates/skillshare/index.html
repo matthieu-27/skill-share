@@ -1,7 +1,14 @@
 {% extends "skillshare/base.html" %}
 
 {% block content %}
+{% load django_bootstrap5 %}
 
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 <p class="h6">
     <a href="{% url "skillshare:schedule_matching" %}" class="mb-3 link-secondary">Filter les créneaux ou je possède les compétences</a>
     <small>(Vous devez être connecté)</small>
