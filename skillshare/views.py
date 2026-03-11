@@ -1,8 +1,9 @@
 from typing import Any
 
+from django.contrib import messages  # type: ignore
+from django.contrib.auth.decorators import login_required  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
-from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect  # type: ignore
 from django.shortcuts import render  # type: ignore
 from django.urls import reverse  # type: ignore
 from django.utils import timezone  # type: ignore
@@ -40,6 +41,13 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
     login_url = "/skillshare"
     redirect_field_name = "redirect_to"
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request, "Vous devez être connecté pour accéder à cette page."
+            )
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.giver = self.request.user
         return super().form_valid(form)
@@ -55,12 +63,17 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
     login_url = "/skillshare"
     redirect_field_name = "redirect_to"
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["skill"].queryset = Skill.objects.filter(
-            ~Q(giver=self.request.user)
-        )
-        return form
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request, "Vous devez être connecté pour accéder à cette page."
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -97,7 +110,10 @@ def schedule_take_form(request, pk):
     )
 
 
+@login_required(login_url="/")
 def schedule_matching_view(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté pour accéder à cette page.")
     user_skills = request.user.skill_set.all()
     matching_schedules = Schedule.objects.filter(skill__in=user_skills).exclude(
         user=request.user
