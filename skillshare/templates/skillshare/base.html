@@ -3,7 +3,7 @@
 {% load django_bootstrap5 %}
 
 {% block bootstrap5_content %}
-<header>
+<header class="container-xxl">
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url "skillshare:index" %}">SkillShare</a>
@@ -32,7 +32,15 @@
     </div>
 </nav>
 </header>
-<main class="container-fluid">
+<main class="container-xxl">
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
     {% block content %}{% endblock %}
 </main>
 </div>
