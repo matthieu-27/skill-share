@@ -18,6 +18,14 @@
 
   {% bootstrap_form form %}
 
+  <div class="alert alert-info mt-3">
+    <strong>Information :</strong>
+    <ul>
+      <li>Si vous sélectionnez une compétence que vous possédez, vous proposez de l'aide.</li>
+      <li>Si vous sélectionnez une compétence que vous ne possédez pas, vous demandez de l'aide.</li>
+    </ul>
+  </div>
+
   {% bootstrap_button button_type="submit" content="OK" %}
   {% bootstrap_button button_type="reset" content="Cancel" %}
 </form>
