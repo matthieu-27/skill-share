@@ -1,29 +1,40 @@
 {% extends "skillshare/base.html" %}
 
 {% block content %}
-    <a href="{% url "skillshare:index" %}">Tout les créneaux</a>
+<p class="h6">
+    <a href="{% url "skillshare:index" %}" class="mb-3">Tout les créneaux</a>
+</p>
     {% for object in matchs %}
-        <ul>
-        {% if not user.is_authenticated %}
-            {% if object.taker %}
-                <li>{{ object.user.slug }} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }}</li>
+        <div class="card mb-3">
+            <div class="card-header">
+            {{ object.skill.category }} - {{ object.skill.category.description }}
+            </div>
+            <div class="card-body">
+            {% if not user.is_authenticated %}
+                {% if object.taker %}
+                    <h5 class="card-title">{{ object.user.slug }} et {{ object.taker.slug }} seront ensemble le {{ object.scheduled_at|date:"d/m/Y" }}</h5>
+                {% else %}
+                    <h5 class="card-title">Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.activity_description }} avec {{ object.user.slug }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></h5>
+                {% endif %}
             {% else %}
-                <li>Crénaux disponible pour le {{ object.scheduled_at }} -- {{ object.activity_description }} avec {{ object.user.slug }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
-            {% endif %}
-        {% else %}
-            {% if object.taker %} 
-                <li>{{ object.user.first_name }} et {{ object.taker.first_name }} seront ensemble le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }}</li> 
-            {% else %} 
-            {% if object.is_request and not object.taker %}
-                <li> {{ object.user.username }} à fait une demande le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li> 
-            {% else %}
-                <li>Créneau disponible le {{ object.scheduled_at }} avec {{ object.user.username }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></li>
-            {% endif %}
-            {% endif %} 
+                {% if object.taker %} 
+                    <p class="card-text">{{ object.user.first_name }} et {{ object.taker.first_name }} seront ensemble le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }}</p> 
+                {% else %} 
+                {% if object.is_request and not object.taker %}
+                    <p class="card-text"> {{ object.user.username }} à fait une demande le {{ object.scheduled_at }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></p> 
+                {% else %}
+                    <p class="card-text">Créneau disponible le {{ object.scheduled_at }} avec {{ object.user.username }} ({{ object.skill.category }}): {{ object.skill.name }} avec {{ object.skill.giver }} -- <a href="{% url 'skillshare:schedule_take' object.id %}">Reserver</a></p>
+                {% endif %}
+                {% endif %} 
+            </div>
+            </div>
         {% endif %}
-        </ul>
-    {% empty %}
-        <li>Pas de créneaux pour l'instant..</li>
-    {% endfor %}
+        {% empty %}
+            <div class="d-flex flex-column w-100 h-100 justify-content-center align-items-center">
+                <h1 class="display-5">Pas de demande..</h1>
+                {% load static %}
+                <img src="{% static 'skillshare/sad_cookie.png' %}" alt="Catégorie vide.." class="h-auto w-25">
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

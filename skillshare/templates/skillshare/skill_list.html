@@ -4,14 +4,18 @@
 {% for category, skills in categories %}
     <div class="card mb-4">
         <div class="card-header">
-            <h2>{{ category.name }}</h2>
+            <h2>{{ category.name }}</h2><small>{{ category.description }}</small>
         </div>
         <div class="card-body">
-            <p>{{ category.description }}</p>
             <ul class="list-group">
                 {% for skill in skills %}
                     <li class="list-group-item">
-                        {{ skill.name }} - {{ skill.giver.username }}
+                        {{ skill.name }} - 
+                        {% if user.is_authenticated %}
+                        {{ skill.giver.get_full_name }}
+                        {% else %}
+                        {{ skill.giver.slug }}
+                        {% endif %}
                     </li>
                 {% empty %}
                     <li class="list-group-item">Aucune compétence dans cette catégorie.</li>
