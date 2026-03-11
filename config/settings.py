@@ -82,7 +82,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
+ACCOUNT_USER_DISPLAY = lambda user: user.get_full_name()  # noqa: E731
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
