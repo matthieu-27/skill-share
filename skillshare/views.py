@@ -77,10 +77,11 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        messages.success(self.request, "Votre demande a bien été enregistrée.")
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
-        return reverse("skillshare:schedule_add")
+        return reverse("skillshare:index")
 
 
 def schedule_take_form(request, pk):
