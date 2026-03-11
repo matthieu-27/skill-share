@@ -139,6 +139,7 @@ class ScheduleTakeFormView(LoginRequiredMixin, FormView):
         if schedule.taker is None:
             schedule.taker = request.user
             schedule.save()
+        messages.success(self.request, "Le créneau a été pris avec succès.")
         return HttpResponseRedirect("/skillshare")
 
 
