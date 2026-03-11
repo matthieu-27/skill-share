@@ -1,7 +1,7 @@
 {% extends "skillshare/base.html" %}
 
 {% block content %}
-    <a href="{% url "skillshare:schedule_matching" %}">Filter les créneaux ou je possède les compétences</a>
+    <a href="{% url "skillshare:schedule_matching" %}">Filter les créneaux ou je possède les compétences</a> <small>*Vous devez être connecté</small>
     {% for object in object_list %}
         <ul>
         {% if not user.is_authenticated %}
