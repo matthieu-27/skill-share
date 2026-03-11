@@ -57,7 +57,7 @@ def get_random_slug() -> str:
         "raptor",
         "vulture",
     ]
-    adjective = random.choice(adjectives)
-    noun = random.choice(nouns)
+    adjective = random.choice(adjectives).capitalize()
+    noun = random.choice(nouns).capitalize()
     random_number = random.randint(100, 999)
     return f"{adjective}{noun}{random_number}"
