@@ -64,6 +64,12 @@ class Schedule(models.Model):
 
 
 class CustomUser(AbstractUser):
+    """
+    Adds a slug field to the user model to hide user names
+
+    Uses the get_random_slug function to generate a random slug
+    """
+
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):

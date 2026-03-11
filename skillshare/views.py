@@ -13,20 +13,38 @@ from .models import Schedule, Skill
 
 
 class HomeListView(ListView):
+    """
+    View that displays a list of schedules.
+    """
+
     model = Schedule
     template_name = "skillshare/index.html"
+    paginate_by = 5  # Nombre de créneaux par page
 
     def get_context_data(self, **kwargs):
+        """
+        Function used to add the current time to the context.
+
+        Returns:
+            dict: The context with the current time added.
+        """
         context = super().get_context_data(**kwargs)
         context["now"] = timezone.now()
         return context
 
 
 class SkillListView(ListView):
+    """
+    View that displays a list of skills grouped by category.
+    """
+
     model = Skill
     template_name = "skillshare/skill_list.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        """
+        Function used to group skills by category and add them to the context.
+        """
         context = super().get_context_data(**kwargs)
         # Regrouper les compétences par catégorie en utilisant object_list
         categories_dict: dict[Any, Any] = {}
@@ -39,6 +57,10 @@ class SkillListView(ListView):
 
 
 class SkillCreateView(LoginRequiredMixin, CreateView):
+    """
+    View that allows users to create a new skill.
+    """
+
     model = Skill
     form_class = SkillForm
     template_name = "skillshare/skill_form.html"
@@ -46,6 +68,11 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
     redirect_field_name = "redirect_to"
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Function used to check if the user is authenticated.
+
+        Displays an error message if the user is not authenticated.
+        """
         if not request.user.is_authenticated:
             messages.error(
                 request, "Vous devez être connecté pour accéder à cette page."
@@ -53,6 +80,9 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        """
+        Function used to check if the skill already exists for the user and save the form.
+        """
         # Vérifier si la compétence existe déjà pour cet utilisateur
         if Skill.objects.filter(
             name=form.cleaned_data["name"], giver=self.request.user
@@ -63,6 +93,9 @@ class SkillCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
+        """
+        Function used to redirect the user to the skill add page after the form is submitted.
+        """
         return reverse("skillshare:skill_add")
 
 
@@ -163,6 +196,11 @@ class ScheduleTakeFormView(LoginRequiredMixin, FormView):
         )
 
     def post(self, request, *args, **kwargs):
+        """
+        Handles the form submission. If the schedule is available, the user is assigned as the taker.
+
+        Redirects to the home page after the operation.
+        """
         schedule = self.get_object()
         if schedule.taker is None:
             schedule.taker = request.user
@@ -182,12 +220,18 @@ class ScheduleMatchingView(LoginRequiredMixin, ListView):
     redirect_field_name = "redirect_to"
 
     def get_queryset(self):
+        """
+        Function used to get the schedules matching the user's skills.
+        """
         user_skills = self.request.user.skill_set.all()
         return Schedule.objects.filter(skill__in=user_skills).exclude(
             user=self.request.user
         )
 
     def get_context_data(self, **kwargs):
+        """
+        Function used to add the matching schedules to the context.
+        """
         context = super().get_context_data(**kwargs)
         context["matchs"] = self.get_queryset()
         return context
