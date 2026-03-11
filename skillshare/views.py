@@ -1,14 +1,11 @@
 from typing import Any
 
 from django.contrib import messages  # type: ignore
-from django.contrib.auth.decorators import login_required  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
 from django.http import HttpResponseRedirect  # type: ignore
-from django.shortcuts import render  # type: ignore
 from django.urls import reverse  # type: ignore
-from django.utils import timezone  # type: ignore
 from django.views.generic import ListView  # type: ignore
-from django.views.generic.edit import CreateView  # type: ignore
+from django.views.generic.edit import CreateView, FormView  # type: ignore
 
 from .forms import ConfirmForm, ScheduleForm, SkillForm
 from .models import Schedule, Skill
@@ -20,7 +17,6 @@ class HomeListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["now"] = timezone.now()
         return context
 
 
@@ -30,7 +26,6 @@ class SkillListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["now"] = timezone.now()
         return context
 
 
@@ -84,41 +79,77 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         return reverse("skillshare:index")
 
 
-def schedule_take_form(request, pk):
+class ScheduleTakeFormView(LoginRequiredMixin, FormView):
     """
-    Form that sets the taker of a Schedule,
+    View that sets the taker of a Schedule,
     Checks if the Schedule creator is the request maker, if so redirect.
 
     Otherwise saves the interested user for the selected Schedule
     """
-    schedule = Schedule.objects.get(pk=pk)
-    if schedule.user == request.user:
-        return HttpResponseRedirect("/skillshare")
-    if request.method == "GET":
-        form = ConfirmForm()
-        return render(
-            request,
-            "skillshare/schedule_take.html",
-            {"form": form, "schedule": schedule},
+
+    form_class = ConfirmForm
+    template_name = "skillshare/schedule_take.html"
+    login_url = "/skillshare"
+    redirect_field_name = "redirect_to"
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Function used to check if the user is authenticated.
+
+        Displays an error message if the user is not authenticated.
+        """
+        if not request.user.is_authenticated:
+            messages.error(
+                request, "Vous devez être connecté pour accéder à cette page."
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        """
+        Schedule object getter.
+        """
+        return Schedule.objects.get(pk=self.kwargs["pk"])
+
+    def get(self, request, *args, **kwargs):
+        """
+        Checks if the user is the owner of the schedule.
+
+        Redirects to the home page if the user is the owner.
+        """
+        schedule = self.get_object()
+        if schedule.user == request.user:
+            messages.error(request, "Vous ne pouvez pas prendre votre propre créneau.")
+            return HttpResponseRedirect("/skillshare")
+        form = self.get_form()
+        return self.render_to_response(
+            self.get_context_data(form=form, schedule=schedule)
         )
-    if request.method == "POST":
+
+    def post(self, request, *args, **kwargs):
+        schedule = self.get_object()
         if schedule.taker is None:
             schedule.taker = request.user
             schedule.save()
         return HttpResponseRedirect("/skillshare")
-    return render(
-        request, "skillshare/schedule_take.html", {"form": form, "schedule": schedule}
-    )
 
 
-@login_required(login_url="/")
-def schedule_matching_view(request):
-    if not request.user.is_authenticated:
-        messages.error(request, "Vous devez être connecté pour accéder à cette page.")
-    user_skills = request.user.skill_set.all()
-    matching_schedules = Schedule.objects.filter(skill__in=user_skills).exclude(
-        user=request.user
-    )
-    return render(
-        request, "skillshare/schedule_matching.html", {"matchs": matching_schedules}
-    )
+class ScheduleMatchingView(LoginRequiredMixin, ListView):
+    """
+    View that displays schedules matching the user's skills.
+    """
+
+    model = Schedule
+    template_name = "skillshare/schedule_matching.html"
+    login_url = "/skillshare"
+    redirect_field_name = "redirect_to"
+
+    def get_queryset(self):
+        user_skills = self.request.user.skill_set.all()
+        return Schedule.objects.filter(skill__in=user_skills).exclude(
+            user=self.request.user
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["matchs"] = self.get_queryset()
+        return context
