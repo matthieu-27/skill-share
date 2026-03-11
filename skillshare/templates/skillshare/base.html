@@ -20,7 +20,7 @@
             <span class="navbar-text px-2">Bonjour {{ user.username }}</span>
             <form action="{% url 'logout' %}" method="post" >
                 {% csrf_token %}
-                <button type="submit">Logout</button>
+                <button type="submit" class="btn btn-secondary">Logout</button>
             </form>
             {% else %}
             <span class="navbar-text px-2">Bonjour, vous n'êtes pas connecté.</span>
