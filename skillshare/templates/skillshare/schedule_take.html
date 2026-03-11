@@ -14,12 +14,12 @@
 {{ form.media }}
 {# Display a form #}
 <h1>
-    Veuillez confirmer votre réservation de crénaux avec {{ schedule.user.username }}
+    Veuillez confirmer votre réservation de crénaux avec {{ schedule.user.get_full_name }}
 </h1>
 <form method="post" class="form">
   {% csrf_token %}
 
-  {% bootstrap_button button_type="submit" content="Confirmer" %}
+  {% bootstrap_button button_type="submit" content="Confirmer"  %}
   {% bootstrap_button button_type="reset" content="Annuler" %}
 </form>
 {% endblock %}

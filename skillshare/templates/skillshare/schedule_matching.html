@@ -13,6 +13,7 @@
                 <h5 class="card-title">Créneau disponible le {{ object.scheduled_at }} pour {{ object.skill.name }} avec {{ object.skill.giver.get_full_name }}</h5>
                 <p class="card-text">Description de la compétence: {{ object.activity_description }}</p>
                 <p class="card-text">Compétence partagée: {{ object.skill.name }}</p>
+                <p class="card-text">Demandé par : {{ object.user.get_full_name }}</p>
                 <a href="{% url 'skillshare:schedule_take' object.id %}" class="btn btn-secondary">Reserver</a>
             </div>
             </div>
