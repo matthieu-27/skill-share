@@ -1,17 +1,16 @@
 @startuml
+left to right direction
 
-class User{
+class CustomUser {
     + Standard Django User fields
     + slug
+    + skills : Skill[]
 }
 
 class Skill {
     + id : int
     + name: str
     + category : Category
-    + giver : User
-    + activity_description : str
-    + is_request : bool
 }
 
 class Category {
@@ -19,18 +18,41 @@ class Category {
     + name: str
     + description : str
 }
-
 class Schedule {
     + id : int
-    + skill : Skill
+    + giver : CustomUser
+    + taker : CustomUser | None
     + scheduled_at : DateTime
-    + is_active : bool 
-    + taker : User | None
+    + duration : int | None
+    + is_active : bool
+    + skill : Skill
+    + activity_description : str | None
+    + is_request : bool
+    + create_connections() : void
 }
 
-Skill "1" -- "1..*" Category
+class Message {
+    + id : int
+    + content : str
+    + created_at : DateTime
+    + read_at : DateTime | None
+}
 
-User "1" -- "0..*" Skill
+class Connection {
+    + id : int
+    + taker : CustomUser
+    + giver : CustomUser
+    + schedule : Schedule
+    + is_activated : bool
+    + created_at : DateTime
+    + chat : Message[]
+}
 
-Schedule "1..*" -- "1" Skill
-Schedule "0..*" -right-- "1" User
+CustomUser "1..*" --left- "0..*" Skill : possède
+Category "1" -- "0..*" Skill
+CustomUser "1" -down- "0..1" Schedule : giver
+CustomUser "0..1" -- "1" Schedule : taker
+Schedule "1" -- "0..*" Skill
+CustomUser "1" -right- "0..*" Connection
+Schedule "0..1" -right-- "1" Connection
+Message "0..*" -down- "1" Connection
