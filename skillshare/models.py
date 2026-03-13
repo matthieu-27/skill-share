@@ -34,11 +34,11 @@ class Skill(models.Model):
 
 class Schedule(models.Model):
     """
-    Schedule class is associated with a Skill, through a `Skill.giver` and a `taker`
+    Schedule class is associated with a Skill, a `giver` and a `taker`
     has a `scheduled_at` Date, an `activity_description` and a `is_request` to add help requests
     """
 
-    user = models.ForeignKey(
+    giver = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )  # Celui qui crée la demande
     taker = models.ForeignKey(
