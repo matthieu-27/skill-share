@@ -25,7 +25,6 @@ class Skill(models.Model):
     Skill represent an user capability given by a `giver`, is related to a `category`
     """
 
-    giver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
 
@@ -71,6 +70,7 @@ class CustomUser(AbstractUser):
     """
 
     slug = models.SlugField(unique=True, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = get_random_slug()
