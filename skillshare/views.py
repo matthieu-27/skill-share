@@ -182,9 +182,10 @@ class ScheduleMatchingView(LoginRequiredMixin, ListView):
         """
         Function used to get the schedules matching the user's skills.
         """
-        user_skills = self.request.user.skill_set.all()
+        # Accéder aux compétences de l'utilisateur via la relation ManyToMany
+        user_skills = self.request.user.skills.all()
         return Schedule.objects.filter(skill__in=user_skills).exclude(
-            user=self.request.user
+            giver=self.request.user
         )
 
     def get_context_data(self, **kwargs):

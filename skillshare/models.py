@@ -39,7 +39,7 @@ class Schedule(models.Model):
     """
 
     giver = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING
     )  # Celui qui crée la demande
     taker = models.ForeignKey(
         settings.AUTH_USER_MODEL,
