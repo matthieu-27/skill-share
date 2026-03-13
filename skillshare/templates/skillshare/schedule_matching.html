@@ -1,30 +1,32 @@
-{% extends "skillshare/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <p class="h6">
     <a href="{% url "skillshare:index" %}" class="mb-3 link-secondary">Tout les créneaux</a>
 </p>
     {% for object in matchs %}
+        {% if not object.taker  %}
         <div class="card mb-3">
             <div class="card-header">
-            {{ object.skill.category }} - {{ object.skill.category.description }}
+                {{ object.skill.category }} - {{ object.skill.category.description }}
             </div>
             <div class="card-body">
                 <h5 class="card-title">Créneau disponible le {{ object.scheduled_at }} pour {{ object.skill.name }} avec {{ object.skill.giver.get_full_name }}</h5>
                 <p class="card-text">Description de la compétence: {{ object.activity_description }}</p>
                 <p class="card-text">Compétence partagée: {{ object.skill.name }}</p>
-                <p class="card-text">Demandé par : {{ object.user.get_full_name }}</p>
+                <p class="card-text">Demandé par : {{ object.giver.get_full_name }}</p>
                 {% if not object.taker %}
                 <a href="{% url 'skillshare:schedule_take' object.id %}" class="btn btn-secondary">Reserver</a>
                 {% endif %}
             </div>
-            </div>
-        {% empty %}
+        </div>
+        {% else %}
             <div class="d-flex flex-column w-100 h-100 justify-content-center align-items-center">
                 <h1 class="display-5">Pas de demande..</h1>
                 {% load static %}
                 <img src="{% static 'skillshare/sad_cookie.png' %}" alt="Catégorie vide.." class="h-auto w-25">
             </div>
-        {% endfor %}
+        {% endif %}
+    {% endfor %}
     </div>
 {% endblock %}

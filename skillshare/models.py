@@ -49,6 +49,11 @@ class Schedule(models.Model):
         related_name="taken_schedules",
     )
     scheduled_at = models.DateTimeField()
+    duration = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Nombre de jours de disponibilité"
+    )
     is_active = models.BooleanField(default=False)
     skill = models.ForeignKey(Skill, on_delete=models.DO_NOTHING)
 

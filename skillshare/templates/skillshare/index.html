@@ -1,4 +1,4 @@
-{% extends "skillshare/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 {% load django_bootstrap5 %}
@@ -14,7 +14,6 @@
     <small>(Vous devez être connecté)</small>
 </p>
     {% for object in object_list %}
-        {% if object.scheduled_at > now %}
         {% if not user.is_authenticated %}
         <div class="card mb-3">
             <div class="card-header">
@@ -50,10 +49,10 @@
                     {{ object.skill.category }} - {{ object.skill.category.description }}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ object.user.get_full_name }} à fait une demande le {{ object.scheduled_at|date:"d/m/Y" }}</h5>
+                    <h5 class="card-title">{{ object.giver.get_full_name }} à fait une demande le {{ object.scheduled_at|date:"d/m/Y" }}</h5>
                     <p class="card-text">{{ object.activity_description }}</p>
                     <p class="card-text">Compétence requise: {{ object.skill.name }}</p>
-                    {% if object.skill in user.skill_set.all %}
+                    {% if object.skill in user.skills.all %}
                     <a href="{% url 'skillshare:schedule_take' object.id %}" class="btn btn-secondary">Reserver</a>
                     {% else %}
                         <button class="btn btn-secondary" disabled>Compétence requise manquante</button>
@@ -67,7 +66,7 @@
                     {{ object.skill.category }} - {{ object.skill.category.description }}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Créneau disponible le {{ object.scheduled_at }} pour {{ object.skill.name }} avec {{ object.skill.giver.get_full_name }}</h5>
+                    <h5 class="card-title">Créneau disponible le {{ object.scheduled_at|date:"d/m/Y" }} avec {{ object.giver.get_full_name }}</h5>
                     <p class="card-text">Description de la compétence: {{ object.activity_description }}</p>
                     <p class="card-text">Compétence partagée: {{ object.skill.name }}</p>
                     <a href="{% url 'skillshare:schedule_take' object.id %}" class="btn btn-secondary">Reserver</a>
@@ -75,7 +74,6 @@
             </div>
         {% endif %}
         {% endif %} 
-        {% endif %}
         
 
 {% endif %}

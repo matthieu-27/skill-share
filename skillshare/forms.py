@@ -7,19 +7,26 @@ from .models import Schedule
 
 class ScheduleForm(forms.ModelForm):
     """
-    Schedule ModelForm handler, fields: `scheduled_at`, `skill`, `activity_description`.
+    Schedule ModelForm handler, fields: `scheduled_at`, `skill`, `activity_description`, `duration`.
 
-    Adds custom French translated labels.
+    Adds custom French translated labels and widgets.
     """
 
     class Meta:
         model = Schedule
-        fields = ["scheduled_at", "skill", "activity_description"]
-        widgets = {"scheduled_at": DatePickerInput(options={"format": "DD/MM/YYYY"})}
+        fields = ["scheduled_at", "duration", "skill", "activity_description"]
+        widgets = {
+            "scheduled_at": DatePickerInput(options={"format": "DD/MM/YYYY"}),
+            "duration": forms.NumberInput(attrs={"min": "1", "max": "30"}),
+        }
         labels = {
             "scheduled_at": "Jour désiré",
+            "duration": "Durée de disponibilité (en jours)",
             "skill": "Compétences",
             "activity_description": "Description de la demande",
+        }
+        help_texts = {
+            "duration": "Indiquez le nombre de jours pendant lesquels vous êtes disponible (1-30 jours).",
         }
 
     def __init__(self, *args, **kwargs):
@@ -44,7 +51,7 @@ class ScheduleForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         if self.user and self.cleaned_data.get("skill"):
-            instance.is_request = not self.user.skill_set.filter(
+            instance.is_request = not self.user.skills.filter(
                 id=self.cleaned_data["skill"].id
             ).exists()
         if commit:

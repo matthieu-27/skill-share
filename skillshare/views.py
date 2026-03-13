@@ -22,17 +22,8 @@ class HomeListView(ListView):
     paginate_by = 5  # Nombre de créneaux par page
     # order par date de création du plus récent au ancien
     ordering = ["-id"]
-
-    def get_context_data(self, **kwargs):
-        """
-        Function used to add the current time to the context.
-
-        Returns:
-            dict: The context with the current time added.
-        """
-        context = super().get_context_data(**kwargs)
-        context["now"] = timezone.now()
-        return context
+    now = timezone.now()
+    queryset = Schedule.objects.filter(scheduled_at__year=now.year)
 
 
 class SkillListView(ListView):
@@ -97,7 +88,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         """
         Function used to save the form and display a success message.
         """
-        form.instance.user = self.request.user
+        form.instance.giver = self.request.user
         messages.success(self.request, "Votre demande a bien été enregistrée.")
         return super().form_valid(form)
 
@@ -146,7 +137,7 @@ class ScheduleTakeFormView(LoginRequiredMixin, FormView):
         Redirects to the home page if the user is the owner.
         """
         schedule = self.get_object()
-        if schedule.user == request.user:
+        if schedule.giver == request.user:
             messages.error(request, "Vous ne pouvez pas prendre votre propre créneau.")
             return HttpResponseRedirect("/skillshare")
         form = self.get_form()
