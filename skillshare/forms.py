@@ -2,36 +2,7 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput  # type: ignore
 from django import forms  # type: ignore
 from django.utils import timezone  # type: ignore
 
-from .models import Schedule, Skill
-
-
-class SkillForm(forms.ModelForm):
-    """
-    Skill ModelForm handler, fields : `name` and `category`.
-
-    Adds custom French translated labels.
-    """
-
-    class Meta:
-        model = Skill
-        fields = ["name", "category"]
-        labels = {"name": "Compétence", "category": "Catégorie"}
-
-    def clean_name(self):
-        """
-        Validate the name field to ensure it is not empty and has a minimum length.
-
-        Raises:
-            forms.ValidationError: If the name is empty or too short.
-        """
-        name = self.cleaned_data.get("name")
-        if not name:
-            raise forms.ValidationError("Le nom de la compétence est obligatoire.")
-        if len(name) < 3:
-            raise forms.ValidationError(
-                "Le nom de la compétence doit contenir au moins 3 caractères."
-            )
-        return name
+from .models import Schedule
 
 
 class ScheduleForm(forms.ModelForm):

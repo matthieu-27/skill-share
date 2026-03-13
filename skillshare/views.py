@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.generic import ListView  # type: ignore
 from django.views.generic.edit import CreateView, FormView  # type: ignore
 
-from .forms import ConfirmForm, ScheduleForm, SkillForm
+from .forms import ConfirmForm, ScheduleForm
 from .models import Schedule, Skill
 
 
@@ -20,6 +20,8 @@ class HomeListView(ListView):
     model = Schedule
     template_name = "skillshare/index.html"
     paginate_by = 5  # Nombre de créneaux par page
+    # order par date de création du plus récent au ancien
+    ordering = ["-id"]
 
     def get_context_data(self, **kwargs):
         """
@@ -54,49 +56,6 @@ class SkillListView(ListView):
             categories_dict[skill.category].append(skill)
         context["categories"] = categories_dict.items()
         return context
-
-
-class SkillCreateView(LoginRequiredMixin, CreateView):
-    """
-    View that allows users to create a new skill.
-    """
-
-    model = Skill
-    form_class = SkillForm
-    template_name = "skillshare/skill_form.html"
-    login_url = "/skillshare"
-    redirect_field_name = "redirect_to"
-
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Function used to check if the user is authenticated.
-
-        Displays an error message if the user is not authenticated.
-        """
-        if not request.user.is_authenticated:
-            messages.error(
-                request, "Vous devez être connecté pour accéder à cette page."
-            )
-        return super().dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        """
-        Function used to check if the skill already exists for the user and save the form.
-        """
-        # Vérifier si la compétence existe déjà pour cet utilisateur
-        if Skill.objects.filter(
-            name=form.cleaned_data["name"], giver=self.request.user
-        ).exists():
-            messages.error(self.request, "Vous avez déjà une compétence avec ce nom.")
-            return self.form_invalid(form)
-        form.instance.giver = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self) -> str:
-        """
-        Function used to redirect the user to the skill add page after the form is submitted.
-        """
-        return reverse("skillshare:skill_add")
 
 
 class ScheduleCreateView(LoginRequiredMixin, CreateView):
