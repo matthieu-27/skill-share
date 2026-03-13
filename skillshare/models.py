@@ -26,7 +26,9 @@ class Skill(models.Model):
     """
 
     name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(
+        Category, on_delete=models.DO_NOTHING, related_name="skills"
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -50,9 +52,7 @@ class Schedule(models.Model):
     )
     scheduled_at = models.DateTimeField()
     duration = models.PositiveIntegerField(
-        blank=True,
-        null=True,
-        help_text="Nombre de jours de disponibilité"
+        blank=True, null=True, help_text="Nombre de jours de disponibilité"
     )
     is_active = models.BooleanField(default=False)
     skill = models.ForeignKey(Skill, on_delete=models.DO_NOTHING)

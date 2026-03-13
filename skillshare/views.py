@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.contrib import messages  # type: ignore
+from django.contrib.auth import views as views_auth
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
 from django.http import HttpResponseRedirect  # type: ignore
 from django.urls import reverse  # type: ignore
@@ -8,8 +9,8 @@ from django.utils import timezone
 from django.views.generic import ListView  # type: ignore
 from django.views.generic.edit import CreateView, FormView  # type: ignore
 
-from .forms import ConfirmForm, ScheduleForm
-from .models import Schedule, Skill
+from .forms import ConfirmForm, LoginForm, ScheduleForm
+from .models import Category, Schedule
 
 
 class HomeListView(ListView):
@@ -26,27 +27,25 @@ class HomeListView(ListView):
     queryset = Schedule.objects.filter(scheduled_at__year=now.year)
 
 
+class LoginView(views_auth.LoginView):
+    form_class: Any = LoginForm
+    redirect_authenticated_user = True
+
+    def get_success_url(self) -> str:
+        # write your logic here
+        if self.request.user.is_superuser:
+            return "/admin_section"
+        return "/"
+
+
 class SkillListView(ListView):
     """
     View that displays a list of skills grouped by category.
     """
 
-    model = Skill
+    model = Category
     template_name = "skillshare/skill_list.html"
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        """
-        Function used to group skills by category and add them to the context.
-        """
-        context = super().get_context_data(**kwargs)
-        # Regrouper les compétences par catégorie en utilisant object_list
-        categories_dict: dict[Any, Any] = {}
-        for skill in context["object_list"]:
-            if skill.category not in categories_dict:
-                categories_dict[skill.category] = []
-            categories_dict[skill.category].append(skill)
-        context["categories"] = categories_dict.items()
-        return context
+    ordering = ["name"]
 
 
 class ScheduleCreateView(LoginRequiredMixin, CreateView):

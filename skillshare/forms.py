@@ -1,5 +1,9 @@
+from typing import Any
+
 from bootstrap_datepicker_plus.widgets import DatePickerInput  # type: ignore
 from django import forms  # type: ignore
+from django.contrib.auth import views as views_auth
+from django.contrib.auth.forms import AuthenticationForm  # type: ignore
 from django.utils import timezone  # type: ignore
 
 from .models import Schedule
@@ -29,11 +33,11 @@ class ScheduleForm(forms.ModelForm):
             "duration": "Indiquez le nombre de jours pendant lesquels vous êtes disponible (1-30 jours).",
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.user = kwargs.pop("user", None)
         super(ScheduleForm, self).__init__(*args, **kwargs)
 
-    def clean_scheduled_at(self):
+    def clean_scheduled_at(self) -> Any | None:
         """
         Validate the scheduled_at field to ensure it is not in the past.
 
@@ -45,7 +49,7 @@ class ScheduleForm(forms.ModelForm):
             raise forms.ValidationError("La date ne peut pas être dans le passé.")
         return scheduled_at
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> Any:
         """
         Save the form and set is_request based on whether the user owns the skill.
         """
@@ -69,3 +73,12 @@ class ConfirmForm(forms.Form):
     confirm = forms.BooleanField(
         label="Êtes vous sur de confirmer ce créneaux ?", required=True
     )
+
+
+class LoginForm(views_auth.LoginView):
+    """
+    Login `Form` used to login a user.
+    """
+
+    form_class = AuthenticationForm
+    template_name = "skillshare/login.html"
