@@ -3,13 +3,13 @@
 {% block content %}
 {% for category, skills in categories %}
     <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header bg-secondary text-white">
             <h2>{{ category.name }}</h2><small>{{ category.description }}</small>
         </div>
         <div class="card-body">
             <ul class="list-group">
                 {% for skill in skills %}
-                    <li class="list-group-item">
+                    <li class="list-group-item ">
                         {{ skill.name }} - 
                         {% if user.is_authenticated %}
                         {{ skill.giver.get_full_name }}
